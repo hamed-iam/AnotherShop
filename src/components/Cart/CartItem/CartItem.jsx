@@ -7,13 +7,19 @@ import {
   CardContent,
   CardMedia,
 } from '@material-ui/core';
-import useStyle from './styles';
 
-const CartItem = ({ item, onRemoveFromCart, onUpdateCartQty }) => {
-  const classes = useStyle();
+import useStyles from './styles';
+
+const CartItem = ({ item, onUpdateCartQty, onRemoveFromCart }) => {
+  const classes = useStyles();
+
+  const handleUpdateCartQty = (lineItemId, newQuantity) =>
+    onUpdateCartQty(lineItemId, newQuantity);
+
+  const handleRemoveFromCart = (lineItemId) => onRemoveFromCart(lineItemId);
 
   return (
-    <Card>
+    <Card className="cart-item">
       <CardMedia
         image={item.media.source}
         alt={item.name}
@@ -25,20 +31,20 @@ const CartItem = ({ item, onRemoveFromCart, onUpdateCartQty }) => {
           {item.line_total.formatted_with_symbol}
         </Typography>
       </CardContent>
-      <CardActions className={classes.cartActions}>
+      <CardActions className={classes.cardActions}>
         <div className={classes.buttons}>
           <Button
             type="button"
             size="small"
-            onClick={() => onUpdateCartQty(item.id, item.quantity - 1)}
+            onClick={() => handleUpdateCartQty(item.id, item.quantity - 1)}
           >
             -
           </Button>
-          <Typography>{item.quantity}</Typography>
+          <Typography>&nbsp;{item.quantity}&nbsp;</Typography>
           <Button
             type="button"
             size="small"
-            onClick={() => onUpdateCartQty(item.id, item.quantity + 1)}
+            onClick={() => handleUpdateCartQty(item.id, item.quantity + 1)}
           >
             +
           </Button>
@@ -47,7 +53,7 @@ const CartItem = ({ item, onRemoveFromCart, onUpdateCartQty }) => {
           variant="contained"
           type="button"
           color="secondary"
-          onClick={() => onRemoveFromCart(item.id)}
+          onClick={() => handleRemoveFromCart(item.id)}
         >
           Remove
         </Button>
